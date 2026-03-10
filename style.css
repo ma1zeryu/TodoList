@@ -1,0 +1,376 @@
+/* 使用CSS变量，可以轻松改变主题颜色，以及保持视觉一致性 */
+/* 定义全局样式和基础样式 */
+
+:root {
+    --primary-color: #4285f4;
+    --secondary-color: #34a853;
+    --danger-color: #ea4335;
+    --warning-color: #fbbc04;
+    --text-color: #202124;
+    --text-secondary: #5f6368;
+    --border-color: #dadce0;
+    --bg-color: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --border-radius: 8px;
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-secondary);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 600px;
+    /* 让container在页面水平居中 */
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 应用头部样式 */
+.app-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.app-title {
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+/* 输入区域样式 */
+.input-section {
+    margin-bottom: 20px;
+}
+
+.todo-form {
+    display: flex;
+    gap: 10px;
+    background: var(--bg-color);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.todo-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    outline: none;
+    transition: var(--transition);
+}
+
+.todo-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+}
+
+.add-btn {
+    padding: 12px 24px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.add-btn:hover {
+    background: #3367d6;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* 筛选按钮样式 */
+.filter-section {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 20px;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    background: var(--bg-color);
+    border: 2px solid var(--border-color);
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.filter-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.filter-btn.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+/* 待办事项列表样式 */
+.todo-section {
+    flex: 1;
+    margin-bottom: 20px;
+}
+
+.todo-list {
+    list-style: none;
+    background: var(--bg-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.todo-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.todo-item:last-child {
+    border-bottom: none;
+}
+
+.todo-item:hover {
+    background: var(--bg-secondary);
+}
+
+.todo-item.completed {
+    opacity: 0.6;
+}
+
+.todo-item.completed .todo-text{
+    text-decoration: line-through;
+    color: var(--text-secondary);
+}
+
+/* 复选框样式 */
+.todo-checkbox {
+    width: 20px;
+    height: 20px;
+    margin-right: 15px;
+    accent-color: var(--secondary-color);
+    cursor: pointer;
+}
+
+/* 待办事项文本样式 */
+.todo-text {
+    /* 自动扩展 */
+    flex: 1;
+    font-size: 16px;
+    line-height: 1.5;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: var(--transition);
+}
+
+.todo-text:hover {
+    background: rgba(66, 133, 244, 0.05)
+}
+
+.todo-text.editing {
+    background: var(--bg-secondary);
+    outline: 2px solid var(--primary-color);
+}
+
+/* 删除按钮样式 */
+.delete-btn {
+    width: 32px;
+    height: 32px;
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 15px;
+    cursor: pointer;
+    opacity: 0;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.todo-item:hover .delete-btn{
+    opacity: 1;
+}
+
+.delete-btn:hover {
+    background-color: #d33b2c;
+    transform: scale(1.1);
+}
+
+/* 统计信息样式 */
+.stats-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-color);
+    padding: 15px 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.stats-info {
+    display: flex;
+    gap: 20px;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.stats-total, .stats-completed {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#totalCount, #completedCount {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.clear-btn {
+    padding: 8px 16px;
+    background: var(--warning-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 14px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.clear-btn:hover {
+    background: #f9ab00;
+    transform: translateY(-1px);
+}
+
+.clear-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .app-title {
+        font-size: 2rem;
+    }
+    
+    .todo-form {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .add-btn {
+        width: 100%;
+    }
+    
+    .filter-section {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .stats-section {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .stats-info {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .todo-item {
+        padding: 12px 15px;
+    }
+    
+    .todo-text {
+        font-size: 15px;
+    }
+    
+    .filter-btn {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+}
+
+/* 待办事项添加动画 */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.todo-item.new {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* 待办事项删除动画 */
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+.todo-item.removing {
+    animation: slideOut 0.3s ease-in forwards;
+}
+
+/* 空状态提示 */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+}
+
+.empty-state-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state-text {
+    font-size: 18px;
+    font-weight: 500;
+}
