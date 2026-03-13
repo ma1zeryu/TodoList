@@ -2,6 +2,8 @@
 
 A first full-stack project of a development novice
 
+针对需要动态添加dom元素的区域的处理
+
 ```javascript
 //绑定todoList事件采用事件委托写法，把事件绑定到父容器
 document.getElementById('todoList').addEventListener('click', (e) => {
