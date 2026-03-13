@@ -86,4 +86,102 @@ class TodoApp {
         this.saveToStorage();
         this.render();
     }
+
+    //实现事件处理系统
+    bindEvents() {
+        //表单提交事件
+        this.todoForm.addEventListener('submit', (e)=> {
+            e.preventDefault();//阻止提交以及刷新的行为
+            this.addTodo(this.todoInput.value);
+            console.log(e);
+        });
+
+        //待办事项列表的事项委托，因为这里的数据可能动态增加，这样可以避免新增加事件都需要重复绑定
+        //事件是绑定在父元素todoList上的，而不是每个子元素
+        this.todoList.addEventListener('click', (e) => {
+            //找到最近的todo-item来获取id
+            const todoItem = e.target.closest('.todo-item');
+            if(!todoItem) return;
+
+            const id = todoItem.dataset.id;
+
+            //复选框点击，e.target是用户真正点击的元素
+            if(e.target.classList.contains('todo-checkbox')) {
+                this.toggleTodo(id);
+            }
+
+            //删除按钮点击
+            if(e.target.classList.contains('delete-btn')){
+                this.deleteTodo(id);
+            }
+
+            //文本双击编辑
+            if(e.target.classList.contains('todo-text')){
+                this.startEdit(id);
+            }
+        });
+
+        //筛选按钮事件
+        this.filterBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    this.setFilter(e.target.dataset.filter);
+                })
+        });
+
+        //清除已完成按钮
+        this.clearBtn.addEventListener('click',  () => {
+            this.clearCompleted();
+        });
+
+        //编辑时的键盘事件
+        this.todoList.addEventListener('keydown', (e) => {
+            if(e.target.classList.contains('edit-input')){
+                if(e.key === 'Enter') {
+                    this.finishEdit(e.target);
+                } else if (e.key === 'Escape') {
+                    this.cancelEdit();
+                }
+            }
+        });
+
+        //编辑时失去焦点
+        this.todoList.addEventListener('blur', (e) => {
+            if(e.target.classList.contains('edit-input')) {
+                this.finishEdit(e.target);
+            }
+        }, true);
+    }
+
+    //开始编辑
+    startEdit(id) {
+        this.editingId = id;
+        this.render();
+
+        //聚焦到编辑输入框并选中文本
+        const editInput = document.querySelector('.edit-input');
+        if(editInput) {
+            editInput.focus();
+            editInput.select();
+        }
+    }
+
+    //取消编辑
+    cancelEdit() {
+        this.editingId = null;
+        this.render();
+    }
+
+    //设置筛选条件
+    setFilter(filter) {
+        this.filter = filter;
+
+        //更新筛选按钮状态
+        this.filterBtns.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.filter === filter);
+        });
+
+        this.render();
+    }
+
+    //实现渲染系统
 }
