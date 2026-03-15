@@ -53,7 +53,7 @@ class TodoApp {
 
     //删除待办事项
     deleteTodo(id) {
-        this.todos = this.todos.filter(todo => todo.id !== id);
+        this.todos = this.todos.find(todo => todo.id !== id);
         this.saveToStorage();
         this.render();
     }
@@ -62,7 +62,7 @@ class TodoApp {
     toggleTodo(id) {
         const todo = this.todos.filter(todo => todo.id === id);
         if(todo) {
-            toso.completed = !todo.completed;
+            todo.completed = !todo.completed;
             this.saveToStorage();
             this.render();
         }
@@ -70,7 +70,7 @@ class TodoApp {
 
     //编辑待办事项
     editTodo(id, newText){
-        const todo = this.todos.filter(todo => todo.id === id);
+        const todo = this.todos.find(todo => todo.id === id);
         if(todo && newText.trim()){
             todo.text = newText.trim();
             this.saveToStorage();
@@ -184,4 +184,93 @@ class TodoApp {
     }
 
     //实现渲染系统
+    render(){
+        //渲染待办事项列表
+        this.renderTodos();
+
+        //更新统计信息
+        this.updateStats();
+
+        //更新清除按钮状态
+        this.updateClearButton();
+    }
+
+    renderTodos() {
+        const filteredTodos = this.getFilteredTodos();
+
+        if(filteredTodos.length === 0) {
+            this.todoList.innerHTML = this.getEmptyStateHTML();
+            return;
+        }
+
+        const todosHTML = filteredTodos.map(todo => {
+            return this.getTodoHTML(todo);
+        }).join('');
+
+        this.todoList.innerHTML = todosHTML;
+    }
+
+    getFilteredTodos() {
+        switch(this.filter) {
+            case 'active':
+                return this.todos.filter(todo => !todo.completed);
+            case 'completed':
+                return this.todos.filter(todo => todo.completed);
+            default:
+                return this.todos;
+        }
+    }
+
+    getTodoHTML(todo) {
+    const isEditing = this.editingId === todo.id;
+    
+    if (isEditing) {
+        return `
+            <li class="todo-item ${todo.completed ? 'completed' : ''}" data-id="${todo.id}">
+                <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''}>
+                <input type="text" class="edit-input" value="${this.escapeHtml(todo.text)}">
+                <button class="delete-btn" title="删除">×</button>
+            </li>
+        `;
+    }
+    
+    return `
+        <li class="todo-item ${todo.completed ? 'completed' : ''}" data-id="${todo.id}">
+            <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''}>
+            <span class="todo-text" title="双击编辑">${this.escapeHtml(todo.text)}</span>
+            <button class="delete-btn" title="删除">×</button>
+        </li>
+        `;
+    }
+
+    getEmptyStateHTML() {
+    const messages = {
+        all: '还没有任何待办事项<br>点击上方输入框开始添加吧！',
+        active: '太棒了！所有任务都已完成 🎉',
+        completed: '还没有完成任何任务<br>加油完成你的目标吧！'
+    };
+    
+    return `
+        <div class="empty-state">
+            <div class="empty-state-icon">📝</div>
+            <div class="empty-state-text">${messages[this.filter]}</div>
+        </div>
+    `;
+    }
+
+    updateClearButton() {
+        const hasCompleted = this.todos.some(todo => todo.completed);
+        this.clearBtn.disabled = !hasCompleted;
+    }
+
+    // HTML转义，防止XSS攻击
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
 }
+
+
+
+
